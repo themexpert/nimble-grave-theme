@@ -1,21 +1,32 @@
-<div class="sidebar-content">
-	<h4>Random Article</h4>
-	<a class="button" href="{{ base_url_relative }}/random"><i class="fa fa-retweet"></i> I'm Feeling Lucky!</a>
-</div>
-<div class="sidebar-content">
-	<h4>Some Text Widget</h4>
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.</p>
-</div>
-<div class="sidebar-content">
-    <h4>Popular Tags</h4>
-    {% include 'taxonomylist.html.twig' with {'taxonomy':'tag'} %}
-</div>
-<div class="sidebar-content">
-    <h4>Archives</h4>
-	{% include 'partials/archives.html.twig' %}
-</div>
-<div class="sidebar-content syndicate">
-    <h4>Syndicate</h4>
-    <a class="button" href="{{ base_url }}.atom"><i class="fa fa-rss-square"></i> Atom 1.0</a>
-    <a class="button" href="{{ base_url }}.rss"><i class="fa fa-rss-square"></i> RSS</a>
-</div>
+{% macro loop(page, parent_loop) %}
+    {% for p in page.children %}
+    <pre>
+    {{dump(p.header)}}
+</pre>
+    
+        {% if p.visible %}
+        <li class="dd-item" data-nav-level='{{ data_level }}' data-nav-id="{{ p.route }}">
+            <a href="{{ p.url }}">
+                <i class="read-icon icon-check"></i>
+                <i class="bookmark-icon icon-star"></i>
+                <span>
+                    {{ p.menu }}
+                </span>
+            </a>
+            {% if p.children.count > 0 %}
+            <ul>
+                {{ _self.loop(p, parent_loop) }}
+            </ul>
+            {% endif %}
+        </li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+<ul class="topics">
+    {{ _self.loop(pages, '') }}
+</ul>
+
+<hr />
+<a href="#" data-clear-history-toggle><i class="icon-back-in-time"></i> Clear History</a><br />
+<a href="#" data-clear-bookmark-toggle><i class="icon-star"></i> Clear Bookmarks</a><br />
